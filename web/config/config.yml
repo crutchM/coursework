@@ -1,0 +1,6 @@
+port: "8000"
+rabbit_user: "myuser"
+rabbit_password: "22334455"
+rabbit_port: "5672"
+queue_name: "repo"
+db_url: "postgres://postgres:postgres@db:5432/postgres?sslmode=disable"

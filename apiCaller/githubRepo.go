@@ -1,4 +1,4 @@
-package models
+package main
 
 type GithubRepository struct {
 	Id            int64  `json:"id" db:"id"`
