@@ -1,9 +1,11 @@
 package handler
 
 import (
+	"coursework/web/internal/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 type Input struct {
@@ -21,7 +23,13 @@ func (s *Handler) addNewRepo(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	s.service.FavoritesService.PutToFavorites(userId, 0)
+
+	time.Sleep(3 * time.Second)
+	id, err := s.service.GithubRepositoryService.GetByUrl(input.Url)
+	if err != nil {
+		return
+	}
+	s.service.FavoritesService.PutToFavorites(userId, id)
 	sendJsonResponse(c, 200, "message", "ok")
 }
 
@@ -58,4 +66,50 @@ func (s *Handler) getRepoData(c *gin.Context) {
 	}
 
 	sendJsonResponse(c, 200, "repository", repo)
+}
+
+func (s *Handler) putRepoData(c *gin.Context) {
+	var repo models.GithubRepository
+
+	if err := c.BindJSON(&repo); err != nil {
+		newErrorResponse(c, 400, err.Error())
+		return
+	}
+
+	id, err := s.service.SetRepoData(repo)
+	if id == 99999 {
+		return
+	}
+	if err != nil {
+		newErrorResponse(c, 500, err.Error())
+		return
+	}
+
+	sendJsonResponse(c, 200, "id", id)
+}
+
+func (s *Handler) getFavs(c *gin.Context) {
+	id, err := getUserId(c)
+	if err != nil {
+		newErrorResponse(c, 400, err.Error())
+	}
+
+	res, err := s.service.FavoritesService.GetAll(id)
+
+	if err != nil {
+		newErrorResponse(c, 500, err.Error())
+		return
+	}
+
+	sendJsonResponse(c, 200, "repos", res)
+}
+
+func (s *Handler) getAll(c *gin.Context) {
+	res, err := s.service.GithubRepositoryService.GetAll()
+	if err != nil {
+		newErrorResponse(c, 500, err.Error())
+		return
+	}
+
+	sendJsonResponse(c, 200, "repos", res)
 }

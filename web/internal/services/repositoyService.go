@@ -32,6 +32,10 @@ func (r RepositoriesService) SetRepoData(repo models.GithubRepository) (int, err
 	return r.repo.SetRepoData(repo)
 }
 
+func (r RepositoriesService) GetByUrl(url string) (int, error) {
+	return r.repo.GetByUrl(url)
+}
+
 func (r RepositoriesService) AddRepoData(url string) {
 	if err := r.broker.Publish(map[string]interface{}{"repository": url}); err != nil {
 		logrus.Info(err)

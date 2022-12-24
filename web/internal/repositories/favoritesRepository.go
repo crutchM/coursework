@@ -16,7 +16,7 @@ func NewFavoritesRepository(db *sqlx.DB) *FavoritesRepository {
 func (f FavoritesRepository) GetAll(userId int) ([]models.GithubRepository, error) {
 	var result []models.GithubRepository
 	var ids []int
-	err := f.db.Select(&ids, "SELECT * favorites where userId =$1", userId)
+	err := f.db.Select(&ids, "SELECT repo_id from favorites where user_id =$1", userId)
 	if err != nil {
 		return nil, err
 	}
@@ -32,7 +32,11 @@ func (f FavoritesRepository) GetAll(userId int) ([]models.GithubRepository, erro
 }
 
 func (f FavoritesRepository) PutToFavorites(user int, id int) error {
-	f.db.QueryRow("INSERT INTO favorites(user_id, repo_id) VALUES ($1,$2)", user, id)
+	var res int
+	row := f.db.QueryRow("INSERT INTO favorites(user_id, repo_id) VALUES ($1,$2) RETURNING id", user, id)
+	if err := row.Scan(&res); err != nil {
+		return err
+	}
 	return nil
 }
 

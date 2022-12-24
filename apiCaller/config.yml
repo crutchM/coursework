@@ -1,5 +1,5 @@
 port: "8001"
-base_url: "https://api.github.com"
+base_url: "https://api.github.com/repos"
 main_service_url: "http://web:8000"
 rabbit_user: "myuser"
 rabbit_password: "22334455"

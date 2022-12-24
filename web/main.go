@@ -5,6 +5,7 @@ import (
 	handler2 "coursework/web/internal/handler"
 	"coursework/web/internal/repositories"
 	"coursework/web/internal/services"
+	_ "github.com/lib/pq"
 	"github.com/siruspen/logrus"
 	"github.com/spf13/viper"
 	"log"
@@ -12,14 +13,14 @@ import (
 
 func main() {
 	logrus.SetFormatter(new(logrus.JSONFormatter))
-	rabbit := broker.NewBroker(
-		viper.GetString("rabbit_user"),
-		viper.GetString("rabbit_password"),
-		viper.GetString("rabbit_port"))
 	if err := initConfig(); err != nil {
 		log.Fatal(err)
 	}
 
+	rabbit := broker.NewBroker(
+		viper.GetString("rabbit_user"),
+		viper.GetString("rabbit_password"),
+		viper.GetString("rabbit_port"))
 	db, err := repositories.NewPostgresDb(viper.GetString("db_url"))
 	if err != nil {
 		logrus.Fatal(err)

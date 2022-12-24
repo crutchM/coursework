@@ -14,6 +14,7 @@ type GithubRepositoryRepo interface {
 	GetAll() ([]models.GithubRepository, error)
 	GetRepoDataFromLocalBase(id int) (models.GithubRepository, error)
 	SetRepoData(repo models.GithubRepository) (int, error)
+	GetByUrl(url string) (int, error)
 }
 
 type FavoritesRepo interface {

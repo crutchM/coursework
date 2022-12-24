@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	amqp "github.com/rabbitmq/amqp091-go"
 	"github.com/spf13/viper"
@@ -8,11 +9,12 @@ import (
 )
 
 func main() {
-	//client := NewClient()
 	if err := initConfig(); err != nil {
 		log.Fatal(err)
 	}
-	conn, err := amqp.Dial(fmt.Sprintf("amqp://%s:%s@rabbit:%s",
+	client := GenerateClient()
+
+	conn, err := amqp.Dial(fmt.Sprintf("amqp://%s:%s@localhost:%s",
 		viper.GetString("rabbit_user"),
 		viper.GetString("rabbit_password"),
 		viper.GetString("rabbit_pot")))
@@ -46,8 +48,13 @@ func main() {
 
 	go func() {
 		for d := range msgs {
-			fmt.Println(d.Body)
-			//client.SendRequestToGithubApi(string(d.Body))
+			var inp Input
+			err := json.Unmarshal(d.Body, &inp)
+			if err != nil {
+				log.Println(err)
+				continue
+			}
+			client.SendRequestToGithubApi(inp.Repository)
 		}
 	}()
 
@@ -62,7 +69,11 @@ func failOnError(err error, msg string) {
 }
 
 func initConfig() error {
-	viper.AddConfigPath("web/config")
+	viper.AddConfigPath("./apiCaller")
 	viper.SetConfigName("config")
 	return viper.ReadInConfig()
+}
+
+type Input struct {
+	Repository string `json:"repository"`
 }

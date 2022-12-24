@@ -27,7 +27,7 @@ func (a AuthRepository) CreateUser(user models.User) (int, error) {
 
 func (a AuthRepository) GetUser(login, password string) (models.User, error) {
 	var user models.User
-	if err := a.db.Get(&user, "SELECT * FROM users WHERE login=$1 and password=$2"); err != nil {
+	if err := a.db.Get(&user, "SELECT * FROM users WHERE login=$1 and password=$2", login, password); err != nil {
 		return models.User{}, err
 	}
 	return user, nil

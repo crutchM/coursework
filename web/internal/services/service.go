@@ -17,6 +17,7 @@ type GithubRepositoryService interface {
 	GetRepoDataFromLocalBase(id int) (models.GithubRepository, error)
 	SetRepoData(repo models.GithubRepository) (int, error)
 	AddRepoData(url string)
+	GetByUrl(url string) (int, error)
 }
 
 type FavoritesService interface {

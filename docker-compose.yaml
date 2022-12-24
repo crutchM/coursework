@@ -2,6 +2,7 @@ version: "3"
 
 services:
   db:
+    #migrate migrate -path ./web/schema -database 'postgres://user:password@localhost:5431/distr?sslmode=disable' up
     image: postgres:13.3
     environment:
       POSTGRES_DB: "distr"
