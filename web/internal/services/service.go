@@ -7,20 +7,20 @@ import (
 )
 
 type AuthService interface {
-	CreateUser(user models.User) (string, error)
+	CreateUser(user models.User) (int, error)
 	GenerateToken(username string, password string) (string, error)
 	ParseToken(accessToken string) (int, error)
 }
 
 type GithubRepositoryService interface {
 	GetAll() ([]models.GithubRepository, error)
-	GetRepoDataFromLocalBase(id string) (models.GithubRepository, error)
+	GetRepoDataFromLocalBase(id int) (models.GithubRepository, error)
 	SetRepoData(repo models.GithubRepository) (int, error)
+	AddRepoData(url string)
 }
 
 type FavoritesService interface {
 	GetAll(userId int) ([]models.GithubRepository, error)
-	GetOne(id int) (models.GithubRepository, error)
 	PutToFavorites(user int, id int) error
 	RemoveFromFavorites(user int, id int) error
 }

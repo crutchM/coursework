@@ -15,7 +15,7 @@ func main() {
 	rabbit := broker.NewBroker(
 		viper.GetString("rabbit_user"),
 		viper.GetString("rabbit_password"),
-		viper.GetString("rabbit_pot"))
+		viper.GetString("rabbit_port"))
 	if err := initConfig(); err != nil {
 		log.Fatal(err)
 	}

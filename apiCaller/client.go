@@ -1,6 +1,10 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
+	"github.com/spf13/viper"
+	"log"
 	"net/http"
 	"time"
 )
@@ -19,5 +23,13 @@ func (s *Client) SendRequestToMainService(repository GithubRepository) {
 }
 
 func (s *Client) SendRequestToGithubApi(url string) {
-
+	resp, err := s.client.Get(fmt.Sprint(viper.GetString("base_url"), "/", url))
+	if err != nil {
+		log.Print(err)
+		return
+	}
+	resp.Body.Close()
+	var repo GithubRepository
+	json.NewDecoder(resp.Body).Decode(&repo)
+	s.SendRequestToMainService(repo)
 }

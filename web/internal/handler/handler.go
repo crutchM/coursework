@@ -20,16 +20,18 @@ func (s *Handler) InitRoues() *gin.Engine {
 		auth.POST("/sign-in")
 		auth.POST("sign-up")
 	}
+	//oauth := router.Group("/oauth")
+	//{
+	//
+	//}
 
 	api := router.Group("/api", s.userIdentity)
 	{
-		favs := api.Group("/favs")
+		repos := api.Group("/repos", s.userIdentity)
 		{
-
-		}
-		repos := api.Group("/repos")
-		{
-
+			repos.GET("/")
+			repos.POST("/")
+			repos.DELETE("/")
 		}
 	}
 	return router

@@ -29,7 +29,7 @@ func NewAuthService(repo repositories.AuthRepo) *AuthorizationService {
 	return &AuthorizationService{repo: repo}
 }
 
-func (s *AuthorizationService) CreateUser(user models.User) (string, error) {
+func (s *AuthorizationService) CreateUser(user models.User) (int, error) {
 	user.Password = generatePassword(user.Password)
 	return s.repo.CreateUser(user)
 }

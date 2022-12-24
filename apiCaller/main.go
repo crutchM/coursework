@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	amqp "github.com/rabbitmq/amqp091-go"
 	"github.com/spf13/viper"
@@ -9,7 +8,7 @@ import (
 )
 
 func main() {
-	client := NewClient()
+	//client := NewClient()
 	if err := initConfig(); err != nil {
 		log.Fatal(err)
 	}
@@ -47,13 +46,8 @@ func main() {
 
 	go func() {
 		for d := range msgs {
-			var result GithubRepository
-			err := json.Unmarshal(d.Body, &result)
-			if err != nil {
-				client.SendRequestToGithubApi(fmt.Sprint(d.Body))
-			} else {
-				client.SendRequestToMainService(result)
-			}
+			fmt.Println(d.Body)
+			//client.SendRequestToGithubApi(string(d.Body))
 		}
 	}()
 

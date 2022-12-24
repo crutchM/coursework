@@ -31,15 +31,6 @@ func (f FavoritesRepository) GetAll(userId int) ([]models.GithubRepository, erro
 	return result, nil
 }
 
-func (f FavoritesRepository) GetOne(id int) (models.GithubRepository, error) {
-	var result models.GithubRepository
-	err := f.db.Get(&result, "SELECT * FROM repositories WHERE id=$1", id)
-	if err != nil {
-		return models.GithubRepository{}, err
-	}
-	return result, nil
-}
-
 func (f FavoritesRepository) PutToFavorites(user int, id int) error {
 	f.db.QueryRow("INSERT INTO favorites(user_id, repo_id) VALUES ($1,$2)", user, id)
 	return nil

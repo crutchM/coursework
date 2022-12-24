@@ -15,11 +15,11 @@ func NewAuthRepository(db *sqlx.DB) *AuthRepository {
 	return &AuthRepository{db: db}
 }
 
-func (a AuthRepository) CreateUser(user models.User) (string, error) {
-	var id string
+func (a AuthRepository) CreateUser(user models.User) (int, error) {
+	var id int
 	row := a.db.QueryRow("INSERT INTO users(id, login, password) values ($1,$2,$3) RETURNING id", user.Id, user.Login, user.Password)
 	if err := row.Scan(&id); err != nil {
-		return "", err
+		return 0, err
 	}
 
 	return id, nil
